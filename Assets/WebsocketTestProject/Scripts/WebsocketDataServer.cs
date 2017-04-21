@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
@@ -23,24 +26,20 @@ public class WebsocketDataServer : MonoBehaviour
 
     public void AddService<T>(string path) where T : Data
     {
-        Debug.Log(path);
         server.AddWebSocketService<DataGetter<T>>(path);
     }
 
-    [System.Serializable]
-    public abstract class Data
-    {
-        public abstract void OnGetData();
-    }
+    public abstract class Data { }
 
-    protected class DataGetter<T> : WebSocketBehavior where T : Data
+    public class DataGetter<T> : WebSocketBehavior where T : Data
     {
-
+        public static Queue<T> recievedData = new Queue<T>();
         protected override void OnMessage(MessageEventArgs e)
         {
             var str = e.Data;
-            T wsData = JsonUtility.FromJson<T>(str);
-            wsData.OnGetData();
+            T data = JsonUtility.FromJson<T>(str);
+            lock (recievedData)
+                recievedData.Enqueue(data);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using WebSocketSharp;
 
 public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour where T : WebsocketDataServer.Data
@@ -20,8 +21,7 @@ public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour where T
 
     WebSocket ws;
     bool sending;
-    
-    public T data { get; set; }
+    protected Queue<T> receivedData { get { return WebsocketDataServer.DataGetter<T>.recievedData; } }
 
     private void Start()
     {
