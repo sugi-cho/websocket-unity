@@ -22,7 +22,14 @@ public class WebsocketDataServer : MonoBehaviour
         server.Start();
     }
 
-    public void AddService<T>(string path) 
+    private void OnDestroy()
+    {
+        if (server != null)
+            server.Stop();
+        _server = null;
+    }
+
+    public void AddService<T>(string path)
     {
         server.AddWebSocketService<DataGetter<T>>(path);
     }
