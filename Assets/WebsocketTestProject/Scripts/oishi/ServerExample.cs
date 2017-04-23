@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using WebSocketSharp;
-using WebSocketSharp.Net;
 using WebSocketSharp.Server;
 
 public class ServerExample : MonoBehaviour

@@ -1,15 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
 
 public class SimpleTexServer : MonoBehaviour
 {
-
     public int listenPort = 3000;
-    WebSocketServer server;
 
+    WebSocketServer server;
     Texture2D tex2d;
 
     // Use this for initialization
@@ -18,6 +15,13 @@ public class SimpleTexServer : MonoBehaviour
         server = new WebSocketServer(listenPort);
         server.AddWebSocketService<FetchData>("/");
         server.Start();
+    }
+
+    private void OnDestroy()
+    {
+        if (server != null)
+            server.Stop();
+        server = null;
     }
 
     // Update is called once per frame
@@ -54,6 +58,7 @@ public class TextureData
 public class FetchData : WebSocketBehavior
 {
     public static TextureData TexData;
+
     protected override void OnMessage(MessageEventArgs e)
     {
         var dataStr = e.Data;

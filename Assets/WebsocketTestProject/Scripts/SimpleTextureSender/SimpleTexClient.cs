@@ -20,6 +20,13 @@ public class SimpleTexClient : MonoBehaviour
         };
     }
 
+    private void OnDestroy()
+    {
+        if (ws != null)
+            ws.Close();
+        ws = null;
+    }
+
     // Update is called once per frame
     void Update()
     {
