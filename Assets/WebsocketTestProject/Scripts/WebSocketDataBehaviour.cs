@@ -2,7 +2,7 @@
 using UnityEngine;
 using WebSocketSharp;
 
-public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour where T : WebsocketDataServer.Data
+public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour
 {
     public static WebSocketDataBehaviour<T> Instance
     {

@@ -32,7 +32,7 @@ public class WsTextureData : WebSocketDataBehaviour<WsTextureData.Data>
     }
 
     [System.Serializable]
-    public class Data : WebsocketDataServer.Data
+    public class Data
     {
         public int texWidth = 512;
         public int texheight = 512;

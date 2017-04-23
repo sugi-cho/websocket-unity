@@ -24,14 +24,12 @@ public class WebsocketDataServer : MonoBehaviour
         server.Start();
     }
 
-    public void AddService<T>(string path) where T : Data
+    public void AddService<T>(string path) 
     {
         server.AddWebSocketService<DataGetter<T>>(path);
     }
 
-    public abstract class Data { }
-
-    public class DataGetter<T> : WebSocketBehavior where T : Data
+    public class DataGetter<T> : WebSocketBehavior
     {
         public static Queue<T> recievedData = new Queue<T>();
         protected override void OnMessage(MessageEventArgs e)
