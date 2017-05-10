@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using WebSocketSharp;
-using MsgPack;
+using MessagePack;
 
 public enum DataType { json, msgPack, };
 public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour
@@ -25,7 +25,6 @@ public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour
     WebSocket ws;
     bool sending;
     protected Queue<T> receivedData { get { return WebsocketDataServer.JsonGetter<T>.recievedData; } }
-    ObjectPacker packer;
 
     private void Start()
     {
@@ -68,9 +67,7 @@ public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour
                 ws.SendAsync(json, OnSendCompleted);
                 break;
             case DataType.msgPack:
-                if (packer == null)
-                    packer = new ObjectPacker();
-                var msg = packer.Pack(data);
+                var msg = MessagePackSerializer.Serialize(data);
                 ws.SendAsync(msg, OnSendCompleted);
                 break;
         }

@@ -32,6 +32,7 @@ public class SimpleTexServer : MonoBehaviour
             if (tex2d == null)
                 tex2d = new Texture2D(2, 2);
             tex2d.LoadImage(FetchData.data);
+            Debug.Log(System.BitConverter.ToString(FetchData.data));
             FetchData.data = null;
         }
     }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
-using MsgPack;
+using MessagePack;
 
 public class WebsocketDataServer : MonoBehaviour
 {
@@ -37,7 +37,6 @@ public class WebsocketDataServer : MonoBehaviour
 
     public class JsonGetter<T> : WebSocketBehavior
     {
-        ObjectPacker packer;
         public static Queue<T> recievedData = new Queue<T>();
         protected override void OnMessage(MessageEventArgs e)
         {
@@ -45,17 +44,10 @@ public class WebsocketDataServer : MonoBehaviour
             if (e.IsText)
                 data = JsonUtility.FromJson<T>(e.Data);
             else if (e.IsBinary)
-                data = PackMsg(e.RawData);
+                data = MessagePackSerializer.Deserialize<T>(e.RawData);
             if (!e.IsPing)
                 lock (recievedData)
                     recievedData.Enqueue(data);
-        }
-
-        T PackMsg(byte[] data)
-        {
-            if (packer == null)
-                packer = new ObjectPacker();
-            return packer.Unpack<T>(data);
         }
     }
 }
