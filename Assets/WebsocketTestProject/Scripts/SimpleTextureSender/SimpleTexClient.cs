@@ -32,15 +32,10 @@ public class SimpleTexClient : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var texData = new TextureData()
-            {
-                name = tex2d.name,
-                data = tex2d.EncodeToPNG(),
-            };
-            var json = JsonUtility.ToJson(texData);
+            var data = tex2d.EncodeToPNG();
             if (!ws.IsConnected)
                 ws.Connect();
-            ws.Send(json);
+            ws.Send(data);
         }
     }
 }

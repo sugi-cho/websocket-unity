@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using WebSocketSharp;
+using MsgPack;
 
+public enum DataType { json, msgPack, };
 public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour
 {
     public static WebSocketDataBehaviour<T> Instance
@@ -18,10 +20,12 @@ public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour
     public string remoteAddress = "localhost";
     public int remotePort = 3000;
     public string path = "/";
+    public DataType dataType;
 
     WebSocket ws;
     bool sending;
-    protected Queue<T> receivedData { get { return WebsocketDataServer.DataGetter<T>.recievedData; } }
+    protected Queue<T> receivedData { get { return WebsocketDataServer.JsonGetter<T>.recievedData; } }
+    ObjectPacker packer;
 
     private void Start()
     {
@@ -57,8 +61,19 @@ public abstract class WebSocketDataBehaviour<T> : WebSocketDataBehaviour
         if (ws == null || !ws.IsConnected)
             ConnectToServer();
         sending = true;
-        var json = JsonUtility.ToJson(data);
-        ws.SendAsync(json, OnSendCompleted);
+        switch (dataType)
+        {
+            case DataType.json:
+                var json = JsonUtility.ToJson(data);
+                ws.SendAsync(json, OnSendCompleted);
+                break;
+            case DataType.msgPack:
+                if (packer == null)
+                    packer = new ObjectPacker();
+                var msg = packer.Pack(data);
+                ws.SendAsync(msg, OnSendCompleted);
+                break;
+        }
     }
     void OnSendCompleted(bool completed)
     {
