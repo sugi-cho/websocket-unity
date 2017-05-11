@@ -32,7 +32,7 @@ public class SimpleTexClient : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            var data = tex2d.EncodeToPNG();
+            var data = tex2d.EncodeToJPG();
             if (!ws.IsConnected)
                 ws.Connect();
             ws.Send(data);
